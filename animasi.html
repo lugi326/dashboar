@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIF ke Daftar dengan Reset Otomatis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #container {
+            text-align: center;
+            width: 200px;
+        }
+        #gif-placeholder {
+            width: 200px;
+            height: 200px;
+            background-color: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        #list-container {
+            display: none;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            background-color: white;
+            overflow: hidden;
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            opacity: 0;
+            transition: all 0.5s ease-out;
+        }
+        #list-container.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        ul {
+            list-style-type: none;
+            padding: 10px;
+            margin: 0;
+            height: 100%;
+            overflow-y: auto;
+        }
+        li {
+            margin-bottom: 10px;
+            padding: 5px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        #trigger-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #trigger-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="gif-placeholder">Simulasi GIF</div>
+        <button id="trigger-button">Mulai Animasi</button>
+        <div id="list-container">
+            <ul>
+                <li>Item 1</li>
+                <li>Item 2</li>
+                <li>Item 3</li>
+                <li>Item 4</li>
+                <li>Item 5</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const gifPlaceholder = document.getElementById('gif-placeholder');
+        const triggerButton = document.getElementById('trigger-button');
+        const listContainer = document.getElementById('list-container');
+
+        function resetToInitialState() {
+            gifPlaceholder.style.display = 'flex';
+            gifPlaceholder.textContent = 'Simulasi GIF';
+            triggerButton.style.display = 'block';
+            listContainer.style.display = 'none';
+            listContainer.classList.remove('show');
+            Array.from(listContainer.getElementsByTagName('li')).forEach(item => {
+                item.style.animation = 'none';
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+            });
+        }
+
+        triggerButton.addEventListener('click', function() {
+            this.style.display = 'none';
+            gifPlaceholder.textContent = 'GIF Berjalan...';
+            
+            setTimeout(() => {
+                gifPlaceholder.style.display = 'none';
+                listContainer.style.display = 'block';
+                
+                setTimeout(() => {
+                    listContainer.classList.add('show');
+                    
+                    const items = listContainer.getElementsByTagName('li');
+                    Array.from(items).forEach((item, index) => {
+                        setTimeout(() => {
+                            item.style.animation = 'fadeInUp 0.5s forwards';
+                        }, index * 100 + 500);
+                    });
+
+                    // Atur waktu untuk kembali ke keadaan awal setelah 5 detik
+                    setTimeout(resetToInitialState, 5000);
+                }, 50);
+            }, 3000); // Simulasi durasi GIF selama 3 detik
+        });
+    </script>
+</body>
+</html>
